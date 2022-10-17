@@ -18,41 +18,51 @@ refs.form.addEventListener("input", throttle(onInputChangesSaveValue, 500));
 refs.form.addEventListener("submit", onSubmit);
 
 function onInputChangesSaveValue(event) {
+  // console.log(formInputValues);
+
   if (event.target.nodeName === refs.input.nodeName) {
     formInputValues.email = event.target.value;
   } else {
     formInputValues.message = event.target.value;
   };
 
-  saveValueToLocalStorage(formInputValues);
+  // console.log(formInputValues);
+  saveValueToLocalStorage();
+  // console.log(saveValueToLocalStorage(formInputValues));
 };
 
 function saveValueToLocalStorage() {
   localStorage.setItem("feedback-form-state", JSON.stringify(formInputValues));
+
+  // return localStorage.getItem("feedback-form-state");
 }
 
 function onSubmit(event) {
   event.preventDefault();
 
   console.log(formInputValues);
-  
-  formInputValues.email = "";
-  formInputValues.message = "";
 
   event.currentTarget.reset();
   localStorage.clear();
+
+  // console.log(formInputValues);
+  // console.log(localStorage);
 }
 
 function setValueToInput() {
-  if (localStorage.getItem("feedback-form-state") !== null) {
-    const tempValues = JSON.parse(localStorage.getItem("feedback-form-state"));
+  if (localStorage.getItem("feedback-form-state") === null) {
+    // console.log('localStorage порожній');
+    return;
+  };
 
-    refs.input.value = tempValues.email;
-    refs.textarea.value = tempValues.message;
-  }
-}
+  const tempValues = JSON.parse(localStorage.getItem("feedback-form-state"));
 
-// =================
-// if (login.value === "" || password.value === "") {
-//     return console.log("Please fill in all the fields!");
-//   }
+  refs.input.value = tempValues.email;
+  formInputValues.email = tempValues.email;
+  refs.textarea.value = tempValues.message;
+  formInputValues.message = tempValues.message;
+
+  // console.log('пушимо дані з localStorage');
+  // console.log(tempValues);
+  // console.log(formInputValues);
+};
